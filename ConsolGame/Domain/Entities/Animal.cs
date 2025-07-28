@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ConsolGame.Domain.Entities
 {
-    public class Player:Unit
+    internal class Animal:Unit
     {
-        public Player(string name)
+        public Animal(int id,int matherId) 
         {
-            _name = name;
-            _id = 1;
+            _name = $"#{matherId}_{id}";
+            _id = id;
             _endurance = 1;
             _strength = 1;
             _agility = 1;
@@ -23,18 +25,18 @@ namespace ConsolGame.Domain.Entities
             _freeStatsPoints = 0;
             _exp = 0;
             _lvl = 1;
-
         }
-        public void StatAdd(char Key)
+        public void StatAdd()
         {
             if (_freeStatsPoints <= 0) return;
-            switch (Key)
+            int rnd = RandomNumberGenerator.GetInt32(5);
+            switch (rnd)
             {
-                case 'P': _strength++; break;
-                case 'L': _agility++; break;
-                case 'M': _endurance++; break;
-                case 'O': _intelligence++; break;
-                case 'K': _wisdom++; break;
+                case 0: _strength++; break;
+                case 1: _agility++; break;
+                case 2: _endurance++; break;
+                case 3: _intelligence++; break;
+                case 4: _wisdom++; break;
                 default: return;
             }
             _freeStatsPoints--;

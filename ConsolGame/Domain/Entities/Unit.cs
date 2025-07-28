@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace ConsolGame.Domain.Entities
         public int ExpForLvlApp { get { return (int)(Lvl * Math.Sqrt(Lvl) * 10); } }
         protected int _id;
         public int Id { get { return _id; } }
+        
         protected int _endurance;
         public int Endurance { get { return _endurance; } }
         protected int _strength;
@@ -36,7 +38,7 @@ namespace ConsolGame.Domain.Entities
         public int MaxHp { get { return Endurance * 10 + Strength * 3; } }
         public int MaxMp { get { return Intelligence * 8 + Wisdom * 2; } }
         public int Speed { get { return Agility * 10 + Intelligence * 5 + Wisdom * 5; } }
-        public int MpForSkill { get { return Intelligence / Wisdom * 10; } }
+        public int MpForSkill { get { return (Wisdom > 0) ? (Intelligence / Wisdom * 10) : (Intelligence * 5); } }
         public int Damage
         {
             get
@@ -62,7 +64,7 @@ namespace ConsolGame.Domain.Entities
         public void AddExp(int lvl)
         {
             _exp += lvl * (int)Math.Sqrt(lvl)+2;
-            if (_exp>=ExpForLvlApp)
+            while (_exp>=ExpForLvlApp)
             {
                 _exp -= ExpForLvlApp;
                 _lvl++;

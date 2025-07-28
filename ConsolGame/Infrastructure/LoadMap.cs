@@ -9,34 +9,47 @@ namespace ConsolGame.Infrastructure
 {
     class LoadMap
     {
-        char[,] CharMap;
+        char[,] _charMap;
+        public char[,] CharMap { get { return _charMap; } }
          public LoadMap() 
         {
             try
             {
-                CharMap = ConvertToArrayChar(File.ReadAllLines("map/1.txt"));
+                _charMap = ConvertToArrayChar(File.ReadAllLines("map/1.txt"));
             }
             catch (Exception ex) 
             {
                 Console.WriteLine($"Error {ex.Message}");
+                Console.ReadKey();
             }
         }
        
         char[,] ConvertToArrayChar(string[] st)
         {
-            int height =st.Count() ;
-            int width = st[0].Length ;
-            char[,] resault = new char[height,width];
+            if (st == null || st.Length == 0)
+            {
+                return new char[0, 0];
+            }
+            int height = st.Count();
+            int width = st[0].Length;
+            char[,] resault = new char[width,height];
             for (int i = 0;i<height;i++)
             {
                 for(int j = 0; j<width; j++)
                 {
-                    resault[i, j] = st[i][j];
-                    Console.Write(st[i][j]);
+                    try { resault[j, i] = st[i][j]; }
+                    catch (Exception ex) 
+                    {
+                        Console.WriteLine($"{ex}");
+                        Console.ReadKey();
+                    }
+                    
+                    
                 }
-                Console.WriteLine();
+                
             }
-            return null;
+            return resault;
         }
+
     }
 }
