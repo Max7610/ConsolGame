@@ -18,7 +18,7 @@ namespace ConsolGame.Application
         Dictionary<int, Animal> _animals;
         Dictionary<int, Vector2> _animalsPosition;
         int IdCount = 2;
-        int timeStep = 1;
+        double timeStep =0.001f;
 
         public GameMeneger() 
         {
@@ -91,6 +91,8 @@ namespace ConsolGame.Application
             if (_player.ChekTempPoints)
             {
                 Console.SetCursorPosition(0, 0);
+                Console.Write("                      ");
+                Console.SetCursorPosition(0, 0);
                 Console.Write("KeyPositon:");
                 char a = char.ToUpper(Console.ReadKey().KeyChar);
                 _animalsPosition[_player.Id] = PlayerGoController(a, _animalsPosition[_player.Id], _map);
@@ -100,6 +102,11 @@ namespace ConsolGame.Application
         {
             if (_player.FreeStatsPoints)
             {
+                Console.SetCursorPosition(0, 0);
+                Console.Write("                      ");
+                Console.SetCursorPosition(0, 0);
+                Console.Write("KeyTcharacteristic:");
+                char a = char.ToUpper(Console.ReadKey().KeyChar);
                 _player.StatAdd(char.ToUpper(Console.ReadKey().KeyChar));
             }
         }

@@ -37,9 +37,9 @@ namespace ConsolGame.Domain.Entities
         public int Hp { get { return _hp; } }
         public int MaxHp { get { return Endurance * 10 + Strength * 3; } }
         public int MaxMp { get { return Intelligence * 8 + Wisdom * 2; } }
-        public int _time;
+        public double _time;
         public bool ChekTempPoints { get { return _countTempPoints>0; } }
-        public int Speed { get { return Agility * 10 + Intelligence * 5 + Wisdom * 5; } }
+        double Speed { get { return 1/(Agility * 10 + Intelligence * 5 + Wisdom * 5); } }
         public int MpForSkill { get { return (Wisdom > 0) ? (Intelligence / Wisdom * 10) : (Intelligence * 5); } }
         public int Damage
         {
@@ -93,7 +93,7 @@ namespace ConsolGame.Domain.Entities
                 _stamina = MaxStamina;
             }
         }
-        public void AddTime(int time)
+        public void AddTime(double time)
         {
             _time += time;
             turn = true;
