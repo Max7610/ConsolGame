@@ -37,30 +37,49 @@ namespace ConsolGame.Domain.Entities
         public int Hp { get { return _hp; } }
         public int MaxHp { get { return Endurance * 10 + Strength * 3; } }
         public int MaxMp { get { return Intelligence * 8 + Wisdom * 2; } }
+        public int _time;
+        public bool ChekTempPoints { get { return _countTempPoints>0; } }
         public int Speed { get { return Agility * 10 + Intelligence * 5 + Wisdom * 5; } }
         public int MpForSkill { get { return (Wisdom > 0) ? (Intelligence / Wisdom * 10) : (Intelligence * 5); } }
         public int Damage
         {
             get
             {
-                if (Mp > MpForSkill)
+                if (Mp > MpForSkill && turn)
                 {
                     _mp -= MpForSkill;
+                    turn = false;
                     return Lvl + Strength * 6 + Agility * 3 + Wisdom * MpForSkill / 2;
                 }
                 else
                 {
-                    return Lvl + Strength * 6 + Agility * 3;
+                    if(_stamina > StForSkill && turn)
+                    {
+                        _stamina -= StForSkill;
+                        turn = false;
+                        return Lvl + Strength * 6 + Agility * 3;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 }
             }
+        }
+        private bool _turn;
+        public bool turn
+        {
+            get => _turn;
+            protected set => _turn = value;
         }
         protected int _stamina;
         public int Stamina { get { return _stamina; } }
         public int MaxStamina { get { return _endurance * 10 + _strength * 5 + _agility * 5; } }
         protected int StForSkill { get {return _strength*3+_agility*2;} }
         protected int _freeStatsPoints;
-        public int FreeStatsPoints { get { return _freeStatsPoints;} }
-
+        public bool  FreeStatsPoints { get { return _freeStatsPoints>0;} }
+        protected int _countTempPoints=0;
+        public bool Life { get { return _hp > 0; } }
         public void AddExp(int lvl)
         {
             _exp += lvl * (int)Math.Sqrt(lvl)+2;
@@ -74,6 +93,26 @@ namespace ConsolGame.Domain.Entities
                 _stamina = MaxStamina;
             }
         }
-        
+        public void AddTime(int time)
+        {
+            _time += time;
+            turn = true;
+            if (_time >= Speed)
+            {
+                _time -= Speed;
+                _countTempPoints++;
+                if (_hp < MaxHp) _hp+=Endurance*2+Strength;
+                if (_mp < MaxMp) _mp+= Intelligence * 2 + Wisdom;
+                if (_stamina < MaxStamina) _stamina+= Endurance * 3;
+            }
+        }
+
+        public void TakingDamage(int damage)
+        {
+            _hp -= damage;
+        }
+
+
+
     }
 }

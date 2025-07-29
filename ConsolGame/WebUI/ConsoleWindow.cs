@@ -96,6 +96,7 @@ namespace ConsolGame.WebUI
             int MaxLenBar = 10;
             int LenBarHp = (int)(((double)count / maxCount) * MaxLenBar);
             string FullBar = new string(' ', LenBarHp);
+            if(LenBarHp > MaxLenBar) LenBarHp = MaxLenBar;
             string EmptyBar = new string(' ', MaxLenBar - LenBarHp);
             Console.Write($"{FullBar}");
             Console.BackgroundColor = EmptyColor;
@@ -126,7 +127,7 @@ namespace ConsolGame.WebUI
         public override void Print()
         {
             int x = (int)UserPozition.X;
-            int y = (int)UserPozition.Y;//х и у перепутаны 
+            int y = (int)UserPozition.Y;
             if (_map == null) return;
           
             DrawMap(x, y);
