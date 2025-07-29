@@ -17,12 +17,13 @@ namespace ConsolGame.WebUI
          */
         StatusWindows statmodul = new StatusWindows { Top = 1, Left = 1 };
         MapWindow mapmodul = new MapWindow { Top = 1, Left = 30 };
-        public void Print(Player player, char[,] map, Dictionary<int, Vector2> animalsPosition)
+        public void Print(Player player, char[,] map, Dictionary<int, Vector2> animalsPosition,string message)
         {
             statmodul.player = player;
             mapmodul.player = player;
             mapmodul.AddMap(map);
             mapmodul.AddUnit(animalsPosition);
+            statmodul.message = message;
             statmodul.Print();
             mapmodul.Print();
         }
@@ -43,12 +44,13 @@ namespace ConsolGame.WebUI
     }
     class StatusWindows : WindowModul
     {
-
+        public string message;
         public override void Print()
         {
             PrintName();
             PrintStatusBar();
             PrintStatus();
+            PrintConsoleMessage();
         }
         void PrintName()
         {
@@ -84,6 +86,13 @@ namespace ConsolGame.WebUI
             line += 2;
             Console.SetCursorPosition(_left, _top + line);
             Console.WriteLine($"<K>  Мудрость {_player.Wisdom}");
+            line += 2;
+        }
+        void PrintConsoleMessage()
+        {
+            Console.SetCursorPosition(_left, _top + line);
+            Console.WriteLine(message);
+            line++;
         }
 
         void PrintBar(string stat, int count, int maxCount, ConsoleColor FullColor, ConsoleColor EmptyColor)

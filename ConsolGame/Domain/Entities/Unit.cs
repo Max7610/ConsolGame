@@ -17,10 +17,9 @@ namespace ConsolGame.Domain.Entities
         public int Lvl { get { return _lvl; } }
         protected int _exp;
         public int Exp { get { return _exp; } }
-        public int ExpForLvlApp { get { return (int)(Lvl * Math.Sqrt(Lvl) * 10); } }
+        public int ExpForLvlApp { get { return (int)(Lvl * Math.Sqrt(Lvl) * 4); } }
         protected int _id;
         public int Id { get { return _id; } }
-        
         protected int _endurance;
         public int Endurance { get { return _endurance; } }
         protected int _strength;
@@ -101,15 +100,40 @@ namespace ConsolGame.Domain.Entities
             {
                 _time -= Speed;
                 _countTempPoints++;
-                if (_hp < MaxHp) _hp+=Endurance*2+Strength;
-                if (_mp < MaxMp) _mp+= Intelligence * 2 + Wisdom;
-                if (_stamina < MaxStamina) _stamina+= Endurance * 3;
+                if (_hp < MaxHp) _hp+=Endurance;
+                if (_hp> MaxHp) _hp = MaxHp;
+                if (_mp < MaxMp) _mp+= Intelligence ;
+                if (_mp > MaxMp) _mp = MaxMp;
+                if (_stamina < MaxStamina) _stamina+= Endurance;
+                if (_stamina > MaxStamina) _stamina = MaxStamina;
             }
         }
-
         public void TakingDamage(int damage)
         {
             _hp -= damage;
+        }
+        protected Random random = new Random();
+        protected void BonusStat()
+        {
+            switch (random.Next(6))
+            {
+                case 0:
+                    _endurance++;
+                    break;
+                case 1:
+                    _strength++;
+                    break;
+                case 2:
+                    _agility++;
+                    break;
+                case 3:
+                    _intelligence++;
+                    break;
+                case 4:
+                    _wisdom++;
+                    break;
+
+            }
         }
 
 

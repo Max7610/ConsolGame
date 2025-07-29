@@ -25,7 +25,12 @@ namespace ConsolGame.Domain.Entities
             _freeStatsPoints = 0;
             _exp = 0;
             _lvl = 1;
+            BonusStat();
+            BonusStat();
+            
         }
+        
+       
         public void StatAdd()
         {
             if (_freeStatsPoints <= 0) return;
@@ -40,6 +45,10 @@ namespace ConsolGame.Domain.Entities
                 default: return;
             }
             _freeStatsPoints--;
+        }
+        public bool BirthOfAnHeir
+        {
+            get { return random.Next(0, 300) < _lvl; } 
         }
     }
 }

@@ -19,6 +19,7 @@ namespace ConsolGame.Application
         Dictionary<int, Vector2> _animalsPosition;
         int IdCount = 2;
         double timeStep =0.001f;
+        string MessageConsol = "KeyPositon:\n WASD KeyTcharacter";
 
         public GameMeneger() 
         {
@@ -40,7 +41,7 @@ namespace ConsolGame.Application
             
             while (_player.Life)
             {
-                _window.Print(_player, CopyArray(_map.CharMap), _animalsPosition);
+                _window.Print(_player, CopyArray(_map.CharMap), _animalsPosition,MessageConsol);
                 Temp();  
             }
         }
@@ -57,7 +58,7 @@ namespace ConsolGame.Application
         void AddAnimal()
         {
             Random random = new Random();
-            while (_animals.Count < 60)
+            while (_animals.Count < 200)
             {
                 
                 Vector2 pozition = new Vector2(random.Next(0, _map.CharMap.GetLength(0)), random.Next(0, _map.CharMap.GetLength(1)));
@@ -72,14 +73,48 @@ namespace ConsolGame.Application
         void Temp()
         {
             //темп состоит из прибавки времени, шаг тех кто может ходить
-            //удар одновременно получение опыта, чистка мёртвых
+            //удар одновременно получение опыта, чистка мёртвых, обновить статистику
             TimeAdd();
             PlayerPhase();
             AnimalGo();
             BatlePhaseAnimals();
             Funeral();
+            BirthOfChild();
+            UpdateStatistik();
         }
-
+        void UpdateStatistik()
+        {
+            MessageConsol = "KeyPositon:\n WASD KeyTcharacter   \n  "+
+                $"Кол-во монстров:{_animals.Count}    \n  "+
+                $"макс ур.:{_animals.Select(x => x.Value.Lvl).Max()}   \n  ";
+        }
+        void BirthOfChild()
+        {
+            Random random = new Random();
+            Dictionary<int, Animal> newAnimals = new Dictionary<int, Animal>();
+            foreach (var i in _animals)
+            {
+                if (i.Value.BirthOfAnHeir)
+                {
+                    bool chek = true;
+                    while (chek)
+                    {
+                        Vector2 pozition = new Vector2(random.Next(0, _map.CharMap.GetLength(0)), random.Next(0, _map.CharMap.GetLength(1)));
+                        if (_map.CharMap[(int)pozition.X, (int)pozition.Y] == ' ' && !_animalsPosition.ContainsValue(pozition))
+                        {
+                            var animal = new Animal(IdCount, i.Value.Id);
+                            newAnimals.Add(IdCount, animal);
+                            _animalsPosition.Add(IdCount++, pozition);
+                            chek = false;
+                        }
+                    }
+                }
+            }
+            foreach(var i in newAnimals)
+            {
+                _animals.Add(i.Key,i.Value);
+            }
+        }
         void PlayerPhase()
         {
             PlayerGo();
@@ -106,7 +141,6 @@ namespace ConsolGame.Application
                 Console.Write("                      ");
                 Console.SetCursorPosition(0, 0);
                 Console.Write("KeyTcharacteristic:");
-                char a = char.ToUpper(Console.ReadKey().KeyChar);
                 _player.StatAdd(char.ToUpper(Console.ReadKey().KeyChar));
             }
         }
